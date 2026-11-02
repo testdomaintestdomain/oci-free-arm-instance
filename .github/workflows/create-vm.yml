@@ -78,19 +78,17 @@ jobs:
             exit 1
           fi
 
-      - name: Send Discord Notification
+      - name: Send Telegram Notification on Success
         if: always()
-        uses: sarisia/actions-status-discord@v1.15.4
+        uses: appleboy/telegram-action@master
         with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          title: "OCI VM Status: ${{ steps.create_vm.outcome }}"
-          status: ${{ steps.create_vm.outcome }}
-          color: ${{ steps.create_vm.outcome == 'success' && '0x28a745' || '0xdc3545' }}
-          description: |
-            Attempt to create A1.Flex VM.
-            **Status:** `${{ steps.create_vm.outcome }}`
-
-            **Log Output:**
-            ```json
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            🎉 УРА! Сервер OCI VM успешно создан!
+            
+            Статус: PROVISIONING
+            Не забудьте отключить Workflow в GitHub Actions!
+            
+            Лог:
             ${{ steps.create_vm.outputs.log_data }}
-            ```
